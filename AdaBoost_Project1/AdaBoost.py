@@ -21,7 +21,7 @@ Modify:
     2018-07-26
 """
 def loadsimpData():
-    datMat = np.matrix([[1. , 2.1],
+    datMat = np.asmatrix([[1. , 2.1],
                         [1.5, 1.6],
                         [1.3, 1. ],
                         [1. , 1. ],
@@ -75,15 +75,15 @@ Modify:
 """
 def buildStump(dataArr, classLabels, D):
     # 输入数据转为矩阵(5, 2)
-    dataMatrix = np.mat(dataArr)
+    dataMatrix = np.asmatrix(dataArr)
     # 将标签矩阵进行转置(5, 1)
-    labelMat = np.mat(classLabels).T
+    labelMat = np.asmatrix(classLabels).T
     # m=5, n=2
     m, n = np.shape(dataMatrix)
     numSteps = 10.0
     bestStump = {}
     # (5, 1)全零列矩阵
-    bestClasEst = np.mat(np.zeros((m, 1)))
+    bestClasEst = np.asmatrix(np.zeros((m, 1)))
     # 最小误差初始化为正无穷大inf
     minError = float('inf')
     # 遍历所有特征
@@ -101,7 +101,7 @@ def buildStump(dataArr, classLabels, D):
                 # 计算分类结果
                 predictedVals = stumpClassify(dataMatrix, i, threshVal, inequal)
                 # 初始化误差矩阵
-                errArr = np.mat(np.ones((m, 1)))
+                errArr = np.asmatrix(np.ones((m, 1)))
                 # 分类正确的，赋值为0
                 errArr[predictedVals == labelMat] = 0
                 # 计算误差
@@ -137,9 +137,9 @@ def adaBoostTrainDS(dataArr, classLabels, numIt=40):
     # 获取数据集的行数
     m = np.shape(dataArr)[0]
     # 样本权重，每个样本权重相等，即1/n
-    D = np.mat(np.ones((m, 1)) / m)
+    D = np.asmatrix(np.ones((m, 1)) / m)
     # 初始化为全零列
-    aggClassEst = np.mat(np.zeros((m, 1)))
+    aggClassEst = np.asmatrix(np.zeros((m, 1)))
     # 迭代
     for i in range(numIt):
         # 构建单层决策树
@@ -154,7 +154,7 @@ def adaBoostTrainDS(dataArr, classLabels, numIt=40):
         # 打印最佳分类结果
         # print("classEst: ", classEst.T)
         # 计算e的指数项
-        expon = np.multiply(-1 * alpha * np.mat(classLabels).T, classEst)
+        expon = np.multiply(-1 * alpha * np.asmatrix(classLabels).T, classEst)
         # 计算递推公式的分子
         D = np.multiply(D, np.exp(expon))
         # 根据样本权重公式，更新样本权重
@@ -164,7 +164,7 @@ def adaBoostTrainDS(dataArr, classLabels, numIt=40):
         aggClassEst += alpha * classEst
         # print("aggClassEst: ", aggClassEst.T)
         # 计算误差
-        aggErrors = np.multiply(np.sign(aggClassEst) != np.mat(classLabels).T, np.ones((m, 1)))
+        aggErrors = np.multiply(np.sign(aggClassEst) != np.asmatrix(classLabels).T, np.ones((m, 1)))
         errorRate = aggErrors.sum() / m
         # print("total error:", errorRate)
         if errorRate == 0.0:
@@ -187,9 +187,9 @@ Modify:
     2018-07-26
 """
 def adaClassify(datToClass, classifierArr):
-    dataMatrix = np.mat(datToClass)
+    dataMatrix = np.asmatrix(datToClass)
     m = np.shape(dataMatrix)[0]
-    aggClassEst = np.mat(np.zeros((m, 1)))
+    aggClassEst = np.asmatrix(np.zeros((m, 1)))
     for i in range(len(classifierArr)):
         # 遍历所有分类器进行分类
         classEst = stumpClassify(dataMatrix, classifierArr[i]['dim'], classifierArr[i]['thresh'], classifierArr[i]['ineq'])

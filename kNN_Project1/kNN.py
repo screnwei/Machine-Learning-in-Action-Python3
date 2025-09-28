@@ -11,6 +11,10 @@ import time
 import numpy as np
 import operator
 
+# 设置matplotlib支持中文显示
+plt.rcParams['font.sans-serif'] = ['Arial Unicode MS', 'SimHei', 'DejaVu Sans']
+plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
+
 """
 函数说明：创建数据集
 
@@ -140,7 +144,8 @@ Modify:
 """
 def showdatas(datingDataMat, datingLabels):
     # 设置汉字格式为14号简体字
-    font = FontProperties(fname=r"C:\Windows\Fonts\simsun.ttc", size=14)
+    # 在macOS上使用系统默认中文字体
+    font = FontProperties(size=14)
     # 将fig画布分隔成1行1列，不共享x轴和y轴，fig画布的大小为（13，8）
     # 当nrows=2，ncols=2时，代表fig画布被分为4个区域，axs[0][0]代表第一行第一个区域
     fig, axs = plt.subplots(nrows=2, ncols=2, sharex=False, sharey=False, figsize=(13, 8))
@@ -161,27 +166,27 @@ def showdatas(datingDataMat, datingLabels):
     # 画出散点图，以datingDataMat矩阵第一列为x，第二列为y，散点大小为15, 透明度为0.5
     axs[0][0].scatter(x=datingDataMat[:,0], y=datingDataMat[:,1], color=LabelsColors, s=15, alpha=.5)
     # 设置标题，x轴label， y轴label
-    axs0_title_text = axs[0][0].set_title(u'每年获得的飞行常客里程数与玩视频游戏所消耗时间占比', FontProperties=font)
-    axs0_xlabel_text = axs[0][0].set_xlabel(u'每年获得的飞行常客里程数', FontProperties=font)
-    axs0_ylabel_text = axs[0][0].set_ylabel(u'玩视频游戏所消耗时间占比', FontProperties=font)
+    axs0_title_text = axs[0][0].set_title(u'每年获得的飞行常客里程数与玩视频游戏所消耗时间占比', fontproperties=font)
+    axs0_xlabel_text = axs[0][0].set_xlabel(u'每年获得的飞行常客里程数', fontproperties=font)
+    axs0_ylabel_text = axs[0][0].set_ylabel(u'玩视频游戏所消耗时间占比', fontproperties=font)
     plt.setp(axs0_title_text, size=9, weight='bold', color='red')
     plt.setp(axs0_xlabel_text, size=7, weight='bold', color='black')
     plt.setp(axs0_ylabel_text, size=7, weight='bold', color='black')
     # 画出散点图，以datingDataMat矩阵第一列为x，第三列为y，散点大小为15, 透明度为0.5
     axs[0][1].scatter(x=datingDataMat[:,0], y=datingDataMat[:,2], color=LabelsColors, s=15, alpha=.5)
     # 设置标题，x轴label， y轴label
-    axs1_title_text = axs[0][1].set_title(u'每年获得的飞行常客里程数与每周消费的冰淇淋公升数', FontProperties=font)
-    axs1_xlabel_text = axs[0][1].set_xlabel(u'每年获得的飞行常客里程数', FontProperties=font)
-    axs1_ylabel_text = axs[0][1].set_ylabel(u'每周消费的冰淇淋公升数', FontProperties=font)
+    axs1_title_text = axs[0][1].set_title(u'每年获得的飞行常客里程数与每周消费的冰淇淋公升数', fontproperties=font)
+    axs1_xlabel_text = axs[0][1].set_xlabel(u'每年获得的飞行常客里程数', fontproperties=font)
+    axs1_ylabel_text = axs[0][1].set_ylabel(u'每周消费的冰淇淋公升数', fontproperties=font)
     plt.setp(axs1_title_text, size=9, weight='bold', color='red')
     plt.setp(axs1_xlabel_text, size=7, weight='bold', color='black')
     plt.setp(axs1_ylabel_text, size=7, weight='bold', color='black')
     # 画出散点图，以datingDataMat矩阵第二列为x，第三列为y，散点大小为15, 透明度为0.5
     axs[1][0].scatter(x=datingDataMat[:,1], y=datingDataMat[:,2], color=LabelsColors, s=15, alpha=.5)
     # 设置标题，x轴label， y轴label
-    axs2_title_text = axs[1][0].set_title(u'玩视频游戏所消耗时间占比与每周消费的冰淇淋公升数', FontProperties=font)
-    axs2_xlabel_text = axs[1][0].set_xlabel(u'玩视频游戏所消耗时间占比', FontProperties=font)
-    axs2_ylabel_text = axs[1][0].set_ylabel(u'每周消费的冰淇淋公升数', FontProperties=font)
+    axs2_title_text = axs[1][0].set_title(u'玩视频游戏所消耗时间占比与每周消费的冰淇淋公升数', fontproperties=font)
+    axs2_xlabel_text = axs[1][0].set_xlabel(u'玩视频游戏所消耗时间占比', fontproperties=font)
+    axs2_ylabel_text = axs[1][0].set_ylabel(u'每周消费的冰淇淋公升数', fontproperties=font)
     plt.setp(axs2_title_text, size=9, weight='bold', color='red')
     plt.setp(axs2_xlabel_text, size=7, weight='bold', color='black')
     plt.setp(axs2_ylabel_text, size=7, weight='bold', color='black')
@@ -317,7 +322,7 @@ Modify:
 """
 def main():
     # 获取程序运行时间
-    start =time.clock()
+    start = time.perf_counter()
     # 打开文件的名称
     filename = "datingTestSet.txt"
     # 打开并处理数据
@@ -325,11 +330,15 @@ def main():
     # 训练集归一化
     normDataset, ranges, minVals = autoNorm(datingDataMat)
     datingClassTest()
-    #print(normDataset)
-    #print(ranges)
-    #print(minVals)
-    # showdatas(datingDataMat, datingLabels)
-    classifyPerson()
+
+    showdatas(datingDataMat, datingLabels)
+    
+    # 在非交互式环境中跳过用户输入
+    try:
+        classifyPerson()
+    except EOFError:
+        print("跳过用户输入部分（非交互式环境）")
+    
     # print(datingDataMat)
     # print(datingLabels)
     # 创建数据集
@@ -340,7 +349,7 @@ def main():
     # test_class = classify0(test, group, labels, 3)
     # 打印分类结果
     # print(test_class)
-    end = time.clock()
+    end = time.perf_counter()
     # 打印程序运行时间
     print('Running time: %f Seconds'%(end-start))
     
